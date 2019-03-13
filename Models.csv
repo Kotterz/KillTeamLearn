@@ -1,0 +1,7 @@
+faction,model,M,WS,BS,S,T,W,A,Ld,Sv,iSv
+Imperium,Intercessor,6,3,3,4,4,2,2,7,3,
+Imperium,Guardsman,6,4,4,3,3,1,1,5,5,
+Tyranids,Termagant,6,4,4,3,3,1,1,5,6,
+Aeldari,Player,8,3,3,3,3,1,4,8,6,4
+Orks,OrkBoy,5,3,5,4,4,1,2,6,6,
+Tau,FireWarrior,6,5,4,3,3,1,1,6,4,
