@@ -1,0 +1,13 @@
+faction,weapon,range,type,A,S,AP,D,abilities
+imperium,lasgun,24,RF,1,3,0,1,
+imperium,boltgun,24,RF,1,4,0,1,
+imperium,flamer,8,AH,D6,4,0,1,this weapon automatically hits its targets
+imperium,plasmagunstandard,24,RF,1,7,3,1,
+imperium,plasmagunsupercharge,24,RF,1,8,3,2,on an unmodified hit roll of 1 this model is taken out of action after all weapon shots have been resolved
+tyranids,fleshborer,12,A,1,4,0,1,
+tyranids,spinefists,12,P,,3,0,1,number of shots same as model attacks
+tyranids,fleshhooks,6,FH,2,,0,1,strength same as model strength
+tyranids,devourer,18,A,3,4,0,1,
+tyranids,barbedstrangler,36,A,D6,5,1,1,
+tyranids,deathspitter,24,A,3,5,1,1,
+tyranids,venomcannon,36,A,D3,8,2,D3,

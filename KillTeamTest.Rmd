@@ -6,25 +6,81 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
+# Markdown setup
 knitr::opts_chunk$set(echo = TRUE)
 
-
-
+# Libraries used
 library(data.table)
+library(glue)
+
+# Pathing
+home <- "C:/Users/Tim/Documents/Warhammer Kill Team/KillTeamLearn"
+
+# Loading
+models <- fread(glue("{home}/Models.csv"))
+wsw <- fread(glue("{home}/WSW.csv"))
+bsw <- fread(glue("{home}/BSW.csv"))
 ```
 
-## MEQ vs GEQ test
+## Tyranids CC Ability
 
-```{r cars}
-model <- fread()
+```{r function}
+# basic close combat simulator
+CCsim <- function(attackerModel
+                  , weaponUsed
+                  , defenderModel
+                  , woundsRemaining = models[model==defenderModel]$W
+                  , attacksRemaining = models[model==attackerModel]$A + wsw[weapon==weaponUsed]$AM
+                  , fleshWounds = 0L
+                  , toxinSacs = F) {
+  
+  # error check
+  
+  # create copies
+  atk <- models[model==attackerModel]
+  wep <- wsw[weapon==weaponUsed]
+  def <- models[model==defenderModel]
+  mat <- data.table(combination=glue("{attackerModel} with {weaponUsed} {attacksRemaining} attack(s) on {defenderModel} with {woundsRemaining} wounds")
+                    , Wleft = woundsRemaining
+                    , Aleft = seq(attacksRemaining, 1, -1))
+  
+  mat[, `:=` (A=seq(1, attacksRemaining)
+                    , aHit=sample(1:6, attacksRemaining, T)
+                    , aWound=sample(1:6, attacksRemaining, T)
+                    , dSave=sample(1:6, attacksRemaining, T))]
+  
+  mat[, Dmg := wep$D]
+  # hardcode toxin sacs
+  mat[toxinSacs==T & aWound==6L, Dmg := wep$D+1]
+  
+  mat[, aKill := lapply(Dmg, function(x) max(sample(1:6, x, T)))]
+  
+  # hardcode scything talons
+  mat[aHit==1 & weaponUsed=="scythingtalons", aHit := sample(1:6, mat[aHit==1, .N], T)]
+
+  mat[, toHit := atk$WS + wep$HM]
+  
+  mat[atk$S >= 2*def$T, toWound := 2L]
+  mat[atk$S == def$T, toWound := 4L]
+  mat[atk$S < def$T & 2*atk$S > def$T, toWound := 5L]
+  mat[atk$S <= 0.5*def$T, toWound := 6L]
+  
+  mat[, toSave := min(def$Sv + wep$AP, def$iSv, na.rm=T), combination]
+    # hardcode rending claws
+  mat[aWound==6L & weaponUsed=="rendingclaws"
+      , toSave := min(def$Sv + wep$AP + 3L, def$iSv, na.rm=T), combination]
+  
+  mat[, toKill := (4L - fleshWounds)]
+  
+  return(mat)
+}
+
+
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r test}
+aaa <- CCsim("termagant", "scythingtalons", "intercessor", toxinSacs = T, attacksRemaining = 36000)
+table(aaa$aHit)
+aaa[, .N, by=list(Dmg>1, aKill>3)]
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

@@ -1,0 +1,7 @@
+faction,weapon,HM,AM,SM,AP,D,abilities
+tyranids,acidmaw,0,0,0,3,1,
+tyranids,boneswords,0,1,0,2,1,
+tyranids,lashwhipandbonesword,0,0,0,2,1,fights back if killed
+tyranids,rendingclaws,0,0,0,1,1,rolls of 6+ to wound resolved at AP4
+tyranids,scythingtalons,0,0,0,0,1,one pair allows reroll 1s two pairs gives +1 AM
+tyranids,graspingtalons,0,0,0,1,2,
